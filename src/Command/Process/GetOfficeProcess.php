@@ -70,8 +70,8 @@ class GetOfficeProcess extends ContainerAwareCommand
 		
 		$n = 0;
 		$httperrors = [];
-		for ($i = 0; $i < 2500; $i++) {
-			$data = fgetcsv($f);
+		while ($data = fgetcsv($f)) {
+			if ($n == 200) break;
 			$companynumber = $data[$companyindex];
 			$data = $comp->getOficiesByCompanyNumber($companynumber);
 			if ($data) {
