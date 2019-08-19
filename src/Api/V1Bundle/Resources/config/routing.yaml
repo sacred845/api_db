@@ -1,0 +1,149 @@
+apiv1_stat_getinfo:
+    path: /test/
+    controller: App\Api\V1Bundle\Controller\IndexController::getinfo
+
+apiv1_languages_list:
+    path: /languages/
+    controller: App\Api\V1Bundle\Controller\LangController::list
+
+apiv1_currencies_list:
+    path: /currencies/
+    controller: App\Api\V1Bundle\Controller\CurrencyController::list
+    
+apiv1_countries_list:
+    path: /locations_countries/
+    controller: App\Api\V1Bundle\Controller\CountryController::list
+
+apiv1_countries_item:
+    path: /locations_countries/{id}
+    controller: App\Api\V1Bundle\Controller\CountryController::item
+    requirements:
+        id: '\d+'    
+    
+apiv1_states_list:
+    path: /locations_states/
+    controller: App\Api\V1Bundle\Controller\StateController::list
+
+apiv1_states_item:
+    path: /locations_states/{id}
+    controller: App\Api\V1Bundle\Controller\StateController::item
+    requirements:
+        id: '\d+' 
+
+apiv1_regions_list:
+    path: /locations_counties/
+    controller: App\Api\V1Bundle\Controller\RegionController::list
+
+apiv1_regions_item:
+    path: /locations_counties/{id}
+    controller: App\Api\V1Bundle\Controller\RegionController::item
+    requirements:
+        id: '\d+'
+
+apiv1_cities_list:
+    path: /locations_cities/
+    controller: App\Api\V1Bundle\Controller\CityController::list
+
+apiv1_industries_list:
+    path: /industries/
+    controller: App\Api\V1Bundle\Controller\IndustryController::list
+
+apiv1_industries_item:
+    path: /industries/{id}
+    controller: App\Api\V1Bundle\Controller\IndustryController::item
+    requirements:
+        id: '\d+'    
+
+apiv1_typesize_list:
+    path: /legal_entity_types_by_size/
+    controller: App\Api\V1Bundle\Controller\TypeSizeController::list
+
+apiv1_typesize_item:
+    path: /legal_entity_types_by_size/{id}
+    controller: App\Api\V1Bundle\Controller\TypeSizeController::item
+    requirements:
+        id: '\d+'   
+
+apiv1_typenum_list:
+    path: /legal_entity_employees_numbers/
+    controller: App\Api\V1Bundle\Controller\TypeNumController::list
+
+apiv1_typenum_item:
+    path: /legal_entity_employees_numbers/{id}
+    controller: App\Api\V1Bundle\Controller\TypeNumController::item
+    requirements:
+        id: '\d+' 
+
+apiv1_compstatuses_list:
+    path: /legal_entity_statuses/
+    controller: App\Api\V1Bundle\Controller\CompstatusController::list
+
+apiv1_compstatuses_item:
+    path: /legal_entity_statuses/{id}
+    controller: App\Api\V1Bundle\Controller\CompstatusController::item
+    requirements:
+        id: '\d+' 
+
+apiv1_comptypes_list:
+    path: /legal_entity_types/
+    controller: App\Api\V1Bundle\Controller\ComptypeController::list
+
+apiv1_comptypes_item:
+    path: /legal_entity_types/{id}
+    controller: App\Api\V1Bundle\Controller\ComptypeController::item
+    requirements:
+        id: '\d+' 
+
+apiv1_nationalities_list:
+    path: /member_nationalities/
+    controller: App\Api\V1Bundle\Controller\NationalityController::list
+
+apiv1_nationalities_item:
+    path: /member_nationalities/{id}
+    controller: App\Api\V1Bundle\Controller\NationalityController::item
+    requirements:
+        id: '\d+' 
+
+apiv1_positions_list:
+    path: /member_positions/
+    controller: App\Api\V1Bundle\Controller\PositionController::list
+
+apiv1_positions_item:
+    path: /member_positions/{id}
+    controller: App\Api\V1Bundle\Controller\PositionController::item
+    requirements:
+        id: '\d+' 
+
+apiv1_rightoblig_list:
+    path: /member_rights_and_obligations/
+    controller: App\Api\V1Bundle\Controller\RightobligController::list
+
+apiv1_rightoblig_item:
+    path: /member_rights_and_obligations/{id}
+    controller: App\Api\V1Bundle\Controller\RightobligController::item
+    requirements:
+        id: '\d+' 
+
+apiv1_pages_list:
+    path: /pages/
+    controller: App\Api\V1Bundle\Controller\PageController::list
+
+apiv1_pages_item:
+    path: /pages/{id}
+    controller: App\Api\V1Bundle\Controller\PageController::item
+    requirements:
+        id: '\d+' 
+
+apiv1_news_list:
+    path: /news/
+    controller: App\Api\V1Bundle\Controller\NewsController::list
+
+apiv1_news_item:
+    path: /news/{id}
+    controller: App\Api\V1Bundle\Controller\NewsController::item
+    requirements:
+        id: '\d+' 
+
+apiv1_usernews_list:
+    path: /user_news/
+    controller: App\Api\V1Bundle\Controller\UserNewsController::list

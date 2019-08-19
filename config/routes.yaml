@@ -1,0 +1,11 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+api_v1:
+    resource: "@ApiV1Bundle/Resources/config/routing.yaml"
+    prefix: /api/v1
+    
+download_file:
+    path: /download/{name}
+    controller: App\Controller\DownloadController::downloadfile
