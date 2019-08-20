@@ -38,7 +38,7 @@ class GetOfficeProcess extends ContainerAwareCommand
        // $parser = $em->getRepository('App:Admin\Parsers')->find($process->getParserId());
       //  echo $parser->getId()."\n";
         ini_set("memory_limit","-1");
-		set_time_limit(3600*24);
+		set_time_limit(3600*24*20);
  //       throw new Exception('Деление на ноль.');
         
 		$proc = $em->getRepository(QueuesProcess::class)->find($input->getArgument('id'));
@@ -71,7 +71,7 @@ class GetOfficeProcess extends ContainerAwareCommand
 		$n = 0;
 		$httperrors = [];
 		while ($data = fgetcsv($f)) {
-			if ($n == 200) break;
+			//if ($n == 200) break;
 			$companynumber = $data[$companyindex];
 			$data = $comp->getOficiesByCompanyNumber($companynumber);
 			if ($data) {
@@ -100,6 +100,9 @@ class GetOfficeProcess extends ContainerAwareCommand
 				if ($comp->isOverLimit())
 					$comp = $this->toNextComp();
 			}
+			
+			if (($n % 1000) == 0)
+				$this->log(Logger::PRIORITY_INFO, 'Получено данных с  '.$n.' компаний.');
 		}
 		
 		$this->log(Logger::PRIORITY_INFO, 'Всего получено данных с  '.$n.' компаний.');

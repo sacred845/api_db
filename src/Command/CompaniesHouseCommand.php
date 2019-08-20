@@ -28,7 +28,8 @@ class CompaniesHouseCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-		set_time_limit(3600*24);
+		set_time_limit(3600*24*20);
+		ini_set("memory_limit","-1");
         $container = $this->getContainer();
         $em = $this->getContainer()->get('doctrine')->getManager();
 		
@@ -78,8 +79,8 @@ class CompaniesHouseCommand extends ContainerAwareCommand
 			$process = new Process(array('/usr/bin/php', 
 							$this->getContainer()->get('kernel')->getRootDir().'/../bin/console', 
 							'app:companieshouse:getoffice', $proc->getId()));	
-			$process->setTimeout(3600*24);
-			$process->setIdleTimeout(3600*24);
+			$process->setTimeout(3600*24*20);
+			$process->setIdleTimeout(3600*24*20);
 			try {
 				$process->mustRun();
 				$proc->setStatus(QueuesProcess::STATUS_SUCCESS);
@@ -101,9 +102,9 @@ class CompaniesHouseCommand extends ContainerAwareCommand
 			$file = $em->getRepository(OutputFile::class)->findOneBy(['code' => 'companieshouse']);
 			$file->setName($newname.'.zip');
 			$em->flush($file);
-			
+			chdir($filedir);
 			rename($path.$name, $filedir.$newname);
-			exec ('zip '.$filedir.$newname.'.zip '.$filedir.$newname.' > /dev/null', $output, $return_var);
+			exec ('zip '.$newname.'.zip '.$newname.' > /dev/null', $output, $return_var);
 			unlink($filedir.$newname);
 			
 			$name = $this->getContainer()->getParameter('companieshouse_officies');
@@ -113,7 +114,7 @@ class CompaniesHouseCommand extends ContainerAwareCommand
 			$em->flush($file);
 			
 			rename($path.$name, $filedir.$newname);
-			exec ('zip '.$filedir.$newname.'.zip '.$filedir.$newname.' > /dev/null', $output, $return_var);
+			exec ('zip '.$newname.'.zip '.$newname.' > /dev/null', $output, $return_var);
 			unlink($filedir.$newname);
 		}
 		/*
