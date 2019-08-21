@@ -21,7 +21,8 @@ class UploadOffice extends UploadCompanyData
 		
 		$this->log(Logger::PRIORITY_INFO, 'Инициализация обэектов');
 		$comp = $this->initComps('office'); 
-		$this->createDataFile((Core::getInstance())->getParameter('comp_officies'));
+		if (is_null($this->part) || ($this->part == 0))
+			$this->createDataFile((Core::getInstance())->getParameter('comp_officies'));
 		$titles = array_map(function($item){return str_replace(':', '_', $item);},
 										$comp->getFields());
 		$this->saveData([$titles], $datafilename);

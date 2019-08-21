@@ -12,7 +12,7 @@ use App\Model\Companieshouse\CompanieshouseInterface;
 
 abstract class UploadCompanyData implements ShedulerInterface
 {
-	private $part;
+	protected $part;
 	
 	public function __construct ()
 	{
