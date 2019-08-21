@@ -68,4 +68,22 @@ class Filing extends CompanieshouseAbstract
 	{
 		return '/company/{company_number}/filing-history';
 	}
+	
+	protected function processData($items, $number): ?array
+	{
+		$res = [];
+
+		foreach ($items as $item) {
+			$item['company_number'] = $number;
+			foreach ($this->getFields() as $field) {
+				$paramname = str_replace(':', '_', $field);
+				$line[$paramname] = $this->getValueByField($field, $item);
+			}	
+			$res[] = $line;
+			var_dump($line['links_document_metadata']);
+			var_dump($line['links_self']);exit;
+		}
+		
+		return $res;
+	}
 }

@@ -12,15 +12,25 @@ use App\Model\Companieshouse\CompanieshouseInterface;
 
 abstract class UploadCompanyData implements ShedulerInterface
 {
+	private $part;
+	
 	public function __construct ()
 	{
 	}
 	
 	abstract public function execute();
 
+	public function setPart($part)
+	{
+		$this->part = $part;
+		return $this;
+	}
+
 	protected function openCompanyFile()
 	{
 		$name = (Core::getInstance())->getParameter('companieshouse');
+		if (!is_null($this->part))
+			$name = str_replace('.csv', '_'.$this->part.'.csv', $name);
 		$path = (Core::getInstance())->getTmpPath();
 
 		$f = fopen($path.$name, 'r');
@@ -42,7 +52,10 @@ abstract class UploadCompanyData implements ShedulerInterface
 
 		foreach ($keys as $key)
 			$this->comps[] = $factory->getComp($key, $name);
-		$this->compindex = 0;
+		if (count($this->comps) > 1)
+			$this->compindex = rand(0, count($this->comps) - 1);
+		else
+			$this->compindex = 0;
 
 		return $this->comps[$this->compindex];
 	}
@@ -50,13 +63,16 @@ abstract class UploadCompanyData implements ShedulerInterface
 	protected function toNextComp(): CompanieshouseInterface
 	{
 		if (count($this->comps) > 1) {
-			$this->compindex = ($this->compindex + 1) % count($this->comps);
+			$this->compindex = rand(0, count($this->comps) - 1);
+			//$this->compindex = ($this->compindex + 1) % count($this->comps);
 			$this->log(Logger::PRIORITY_INFO, 'Переключение на аккаунт '.$this->compindex);
+			/*
 			if ($this->compindex == 0) {
 				$pause = 2*60;
 				$this->log(Logger::PRIORITY_INFO, 'Пауза '.$pause.' секунд.');
 				sleep($pause);
 			}
+			*/
 		}
 		
 		return $this->comps[$this->compindex];

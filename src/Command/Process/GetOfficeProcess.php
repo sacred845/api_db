@@ -26,7 +26,8 @@ class GetOfficeProcess extends ContainerAwareCommand
     {
         $this
             ->setName('app:companieshouse:getoffice')
-            ->addArgument('id', InputArgument::REQUIRED, 'Process id.');
+            ->addArgument('id', InputArgument::REQUIRED, 'Process id.')
+			->addArgument('part', InputArgument::REQUIRED, 'Part id.');
     }
     
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -39,7 +40,7 @@ class GetOfficeProcess extends ContainerAwareCommand
 		$proc->setPid(getmypid());
 		$em->flush($proc);
 
-		(new UploadOffice())->execute();
+		(new UploadOffice())->setPart($input->getArgument('part'))->execute();
 /*
 		$name = $this->getContainer()->getParameter('companieshouse');
 		$path = (Core::getInstance())->getTmpPath();
