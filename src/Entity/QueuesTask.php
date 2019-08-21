@@ -17,6 +17,8 @@ class QueuesTask
 	const STATUS_ERROR = 'error';
 
 	const CODE_COMPANIESHOUSE = 'update_companieshouse';
+	const CODE_FILING = 'update_filing';
+	const CODE_DOWNLOADCOMPANY = 'download_company';
 
 	
     /**

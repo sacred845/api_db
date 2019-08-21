@@ -11,7 +11,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\QueuesProcess;
 use App\Model\Core;
 use App\Model\Logger;
-use App\Model\Companieshouse\Companieshouse;
+use App\Model\Scheduler\UploadOffice;
+
+use App\Model\Companieshouse\Office;
+use App\Model\Companieshouse\CompanieshouseFactory;
+use App\Model\Companieshouse\CompanieshouseInterface;
 
 class GetOfficeProcess extends ContainerAwareCommand
 {
@@ -26,25 +30,17 @@ class GetOfficeProcess extends ContainerAwareCommand
     }
     
     protected function execute(InputInterface $input, OutputInterface $output)
-    {/*
-        $tasks = $this->getContainer()->getParameter('cron_tasks');
-        $currtask = $tasks[$input->getArgument('task')];
-        $classname = $currtask['class'];
-        $method = $currtask['method'];
-        (new $classname)->$method();*/
-       // echo $input->getArgument('id')."\n";
+    {
         $em = $this->getContainer()->get('doctrine')->getManager();
-     //   $process = $em->getRepository('App:Process')->find($input->getArgument('id'));
-       // $parser = $em->getRepository('App:Admin\Parsers')->find($process->getParserId());
-      //  echo $parser->getId()."\n";
         ini_set("memory_limit","-1");
 		set_time_limit(3600*24*20);
- //       throw new Exception('Деление на ноль.');
         
 		$proc = $em->getRepository(QueuesProcess::class)->find($input->getArgument('id'));
 		$proc->setPid(getmypid());
 		$em->flush($proc);
 
+		(new UploadOffice())->execute();
+/*
 		$name = $this->getContainer()->getParameter('companieshouse');
 		$path = (Core::getInstance())->getTmpPath();
 
@@ -65,21 +61,19 @@ class GetOfficeProcess extends ContainerAwareCommand
 		$comp = $this->initComps();
 		$this->createOfficeFile();
 		$titles = array_map(function($item){return str_replace(':', '_', $item);},
-										Companieshouse::OFICE_FILEDS);
+										$comp->getFields());
 		$this->saveOficies([$titles]);
 		
 		$n = 0;
 		$httperrors = [];
 		while ($data = fgetcsv($f)) {
-			//if ($n == 200) break;
+			if ($n == 20) break;
 			$companynumber = $data[$companyindex];
-			$data = $comp->getOficiesByCompanyNumber($companynumber);
+			$data = $comp->getCSVData($companynumber);
 			if ($data) {
 				$this->saveOficies($data);
 				$n++;
 			} else {
-			//	$this->log(Logger::PRIORITY_INFO, 'Опрошено '.$n.' компаний.');
-			//	$this->log(Logger::PRIORITY_ERROR, ' Получен код ошибки '.$comp->getHttpCode());
 				if ($comp->getHttpCode() == 403) {
 					$j = 0;
 					while(($comp->getHttpCode() == 403) && ($j < 10)) {
@@ -113,23 +107,22 @@ class GetOfficeProcess extends ContainerAwareCommand
 			}
 			$this->log(Logger::PRIORITY_ERROR, $errormes);
 		}
-
-	
-		//(new UploadFile(self::URL))->execute();
-		echo "Step2\n";
+*/
+		echo "Success\n";
     }
 	
-	protected function initComps(): Companieshouse
+	protected function initComps(): CompanieshouseInterface
 	{
+		$factory = new CompanieshouseFactory();
 		$keys = $this->getContainer()->getParameter('apikeys');
 		foreach ($keys as $key)
-			$this->comps[] = new Companieshouse($key);
+			$this->comps[] = $factory->getComp($key, 'office');
 		$this->compindex = 0;
 
 		return $this->comps[$this->compindex];
 	}
 	
-	protected function toNextComp(): Companieshouse
+	protected function toNextComp(): CompanieshouseInterface
 	{
 		if (count($this->comps) > 1) {
 			$this->compindex = ($this->compindex + 1) % count($this->comps);

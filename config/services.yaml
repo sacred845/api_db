@@ -5,18 +5,9 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     companieshouse: 'companieshouse.csv'
-    companieshouse_officies: 'companieshouse_officies.csv'
-    apikeys: 
-        - 'mDocmcITInXe09Mr_9xnVDro6yfLG3Qy-KeDdjGb'
-        - '8-p0oRIOPCuWeF2oQt7LsMcbOpxM4Tqasek7obrP'
-        - 'QnzImQQtKYe7OLy_OGj7b0XQdovdT6ysuNsT4cFe'
-        - 'i4mkNiJr9JQVCg-cksfl1ZMYPQKhTEAzziZ0yTok'
-        - '-aNCdWdhVB_4dV5uCpWGRCTPFPmigEViG7kz8Bc9'
-        - '9V1xth0MQM1vNUU5vKbAeT6pGYJyCIvg7pjHcV57'
-        - '7etLwuQo6zYa3PPDuYCVlZgivYoUSSUMXivVb09E'
-        - 'GioIODwWZlb9--EZAmTvTsgDAb5dGRtpGmb5GfBC'
-        - 'hb6YAWsU31S0k61EWif7-H1DCVY-gO1qKa1-jMf4'
-        - 'FPZHa-byFFhfi963wstSw6oUcFUAGCk2Ftg2TTot'
+    comp_officies: 'companieshouse_officies.csv'
+    comp_filing: 'companieshouse_filing.csv'
+    apikeys: '%env(resolve:APIKEYS)%'
     
 services:
     # default configuration for services in *this* file

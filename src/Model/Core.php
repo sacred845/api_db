@@ -35,6 +35,12 @@ class Core
         return $kernel->getRootDir().'/../tmp/';
 	}
 	
+	public function getParameter($param)
+	{
+        global $kernel;
+        return $kernel->getContainer()->getParameter($param);
+	}	
+	
 	public function isSendDataUpdate(): bool
 	{
 		global $kernel;

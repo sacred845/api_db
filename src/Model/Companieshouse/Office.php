@@ -4,11 +4,8 @@ namespace App\Model\Companieshouse;
 
 use App\Model\Core;
 
-class Companieshouse
+class Office extends CompanieshouseAbstract
 {
-	const API_URL = 'https://api.companieshouse.gov.uk/';
-	const API_GETOFFICEIES = '/company/{company_number}/officers';
-	
 	const OFICE_FILEDS = [
 		'company_number',
 		'appointed_on',
@@ -40,24 +37,50 @@ class Companieshouse
 		'resigned_on'
 	];
 
-	private $apikey;
-	private $responsecode;
-	
-	public function __construct($apikey)
+	public function getFields(): array
 	{
-		$this->apikey = $apikey;
+		return [
+			'company_number',
+			'appointed_on',
+			'address:address_line_1',
+			'address:address_line_2',
+			'address:care_of',
+			'address:country',
+			'address:locality',
+			'address:po_box',
+			'address:postal_code',
+			'address:premises',
+			'address:region',
+			'country_of_residence',
+			'date_of_birth:day',
+			'date_of_birth:month',
+			'date_of_birth:year',
+			'former_names:forenames',
+			'former_names:surname',
+			'identification:identification_type',
+			'identification:legal_authority',
+			'identification:legal_form',
+			'identification:place_registered',
+			'identification:registration_number',
+			'links:officer:appointments',
+			'name',
+			'nationality',
+			'occupation',
+			'officer_role',
+			'resigned_on'
+		];
 	}
-	
-	public function isOverLimit(): bool
+
+	public function getCSVData($number): ?array
 	{
-		return $this->responsecode == 429;
+		return $this->getDataByNumber($number);
 	}
-	
-	public function getHttpCode(): int
+
+	protected function getApiUrl(): string
 	{
-		return $this->responsecode;
+		return '/company/{company_number}/officers';
 	}
-	
+
 	public function getOficiesByCompanyNumber($number): ?array
 	{
 		$url = self::API_URL.self::API_GETOFFICEIES.'?items_per_page=100';

@@ -18,12 +18,12 @@ use App\Model\Core;
 use App\Model\Logger;
 use App\Entity\OutputFile;
 
-class CompaniesHouseCommand extends ContainerAwareCommand
+class UpdateFilingCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         $this
-            ->setName('app:companieshouse:update');
+            ->setName('app:filing:update');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -34,7 +34,7 @@ class CompaniesHouseCommand extends ContainerAwareCommand
         $em = $this->getContainer()->get('doctrine')->getManager();
 		
 		$task = new QueuesTask ();
-		$task->setCode(QueuesTask::CODE_COMPANIESHOUSE)
+		$task->setCode(QueuesTask::CODE_FILING)
 				->setStatus(QueuesTask::STATUS_INPROGRESS);
 		$em->persist($task);
 		$em->flush($task);			
@@ -45,8 +45,10 @@ class CompaniesHouseCommand extends ContainerAwareCommand
 			return;
 		}
 		*/
+		
 		$ishaserror = false;
 		/*
+		
 		$proc = new QueuesProcess();
 		$proc->setStatus(QueuesProcess::STATUS_INPROGRESS)
 					->setStartedAt(new \DateTime('now'))
@@ -71,50 +73,43 @@ class CompaniesHouseCommand extends ContainerAwareCommand
 		$em->flush($proc);
 		if (!$ishaserror) {
 			*/
-			$proc = new QueuesProcess();
-			$proc->setStatus(QueuesProcess::STATUS_INPROGRESS)
-						->setStartedAt(new \DateTime('now'))
-						->setTask($task);		
-			$em->persist($proc);
-			$em->flush($proc);			
 			
-			$process = new Process(array('/usr/bin/php', 
-							$this->getContainer()->get('kernel')->getRootDir().'/../bin/console', 
-							'app:companieshouse:getoffice', $proc->getId()));	
-			$process->setTimeout(3600*24*20);
-			$process->setIdleTimeout(3600*24*20);
-			try {
-				$process->mustRun();
-				$proc->setStatus(QueuesProcess::STATUS_SUCCESS);
-			} catch (ProcessFailedException $exception) {
-				$proc->setStatus(QueuesProcess::STATUS_ERROR)
-						->setMessage($exception->getMessage());
-				$ishaserror = true;
+		$proc = new QueuesProcess();
+		$proc->setStatus(QueuesProcess::STATUS_INPROGRESS)
+					->setStartedAt(new \DateTime('now'))
+					->setTask($task);		
+		$em->persist($proc);
+		$em->flush($proc);			
+			
+		$process = new Process(array('/usr/bin/php', 
+						$this->getContainer()->get('kernel')->getRootDir().'/../bin/console', 
+						'app:companieshouse:getfiling', $proc->getId()));	
+		$process->setTimeout(3600*24*20);
+		$process->setIdleTimeout(3600*24*20);
+		try {
+			$process->mustRun();
+			$proc->setStatus(QueuesProcess::STATUS_SUCCESS);
+		} catch (ProcessFailedException $exception) {
+			$proc->setStatus(QueuesProcess::STATUS_ERROR)
+					->setMessage($exception->getMessage());
+			$ishaserror = true;
 			}
-			echo $process->getOutput();
-			$proc->setFinishedAt(new \DateTime('now'));
-			$em->flush($proc);
+		echo $process->getOutput();
+		$proc->setFinishedAt(new \DateTime('now'));
+		$em->flush($proc);
+			
+			
+			
 	//	}
 		
 		if (!$ishaserror) {
-			
 			$path = (Core::getInstance())->getTmpPath();
 			$filedir = $path.'../public/files/';
 			chdir($filedir);
-			/*
-			$name = $this->getContainer()->getParameter('companieshouse'); 
+
+			$name = $this->getContainer()->getParameter('comp_filing');
 			$newname = str_replace('.csv','_'.date('Y-m-d_h:i:s').'.csv',$name);
-			$file = $em->getRepository(OutputFile::class)->findOneBy(['code' => 'companieshouse']);
-			$file->setName($newname.'.zip');
-			$em->flush($file);
-			
-			rename($path.$name, $filedir.$newname);
-			exec ('zip '.$newname.'.zip '.$newname.' > /dev/null', $output, $return_var);
-			unlink($filedir.$newname);
-			*/
-			$name = $this->getContainer()->getParameter('comp_officies');
-			$newname = str_replace('.csv','_'.date('Y-m-d_h:i:s').'.csv',$name);
-			$file = $em->getRepository(OutputFile::class)->findOneBy(['code' => 'comp_officies']);
+			$file = $em->getRepository(OutputFile::class)->findOneBy(['code' => 'comp_filing']);
 			$file->setName($newname.'.zip');
 			$em->flush($file);
 			
