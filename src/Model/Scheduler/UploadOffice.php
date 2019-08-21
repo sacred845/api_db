@@ -29,7 +29,7 @@ class UploadOffice extends UploadCompanyData
 		$n = 0;
 		$httperrors = [];
 		while ($data = fgetcsv($f)) {
-			if ($n == 20) break;
+			//if ($n == 20) break;
 			$companynumber = $data[$companyindex];
 			$data = $comp->getCSVData($companynumber);
 			if ($data) {
@@ -42,7 +42,7 @@ class UploadOffice extends UploadCompanyData
 					$j = 0;
 					while(($comp->getHttpCode() == 403) && ($j < 10)) {
 						sleep(10);
-						$data = $comp->getOficiesByCompanyNumber($companynumber);
+						$data = $comp->getCSVData($companynumber);
 						if ($data) {
 							$this->saveData($data, $datafilename);
 							$n++;

@@ -80,7 +80,7 @@ class Office extends CompanieshouseAbstract
 	{
 		return '/company/{company_number}/officers';
 	}
-
+/*
 	public function getOficiesByCompanyNumber($number): ?array
 	{
 		$url = self::API_URL.self::API_GETOFFICEIES.'?items_per_page=100';
@@ -109,4 +109,5 @@ class Office extends CompanieshouseAbstract
 		}
 		return $res;
 	}
+*/
 }

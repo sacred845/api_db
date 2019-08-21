@@ -42,7 +42,7 @@ class UploadFiling extends UploadCompanyData
 					$j = 0;
 					while(($comp->getHttpCode() == 403) && ($j < 10)) {
 						sleep(10);
-						$data = $comp->getOficiesByCompanyNumber($companynumber);
+						$data = $comp->getCSVData($companynumber);
 						if ($data) {
 							$this->saveData($data, $datafilename);
 							$n++;

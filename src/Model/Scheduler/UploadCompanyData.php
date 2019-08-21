@@ -53,7 +53,7 @@ abstract class UploadCompanyData implements ShedulerInterface
 			$this->compindex = ($this->compindex + 1) % count($this->comps);
 			$this->log(Logger::PRIORITY_INFO, 'Переключение на аккаунт '.$this->compindex);
 			if ($this->compindex == 0) {
-				$pause = 4*60;
+				$pause = 2*60;
 				$this->log(Logger::PRIORITY_INFO, 'Пауза '.$pause.' секунд.');
 				sleep($pause);
 			}
