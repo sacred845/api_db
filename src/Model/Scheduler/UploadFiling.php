@@ -29,7 +29,7 @@ class UploadFiling extends UploadCompanyData
 		$n = 0;
 		$httperrors = [];
 		while ($data = fgetcsv($f)) {
-			if ($n == 20) break;
+		//	if ($n == 20) break;
 			$companynumber = $data[$companyindex];
 			$data = $comp->getCSVData($companynumber);
 			if ($data) {

@@ -46,7 +46,10 @@ abstract class CompanieshouseAbstract implements CompanieshouseInterface
 		$res = null;
 		if (($this->responsecode == 200) && $respnose['response']) {
 			$data = json_decode($respnose['response'], true);
-			$res = $this->processData($data['items'], $number);
+			if (!($data['items'] ?? null))
+				;//var_dump($data);
+			else
+				$res = $this->processData($data['items'], $number);
 		}
 		return $res;
 	}
@@ -80,6 +83,8 @@ abstract class CompanieshouseAbstract implements CompanieshouseInterface
 		} else
 			$value = $item[$field] ?? '';
 		
+		if (is_array($value))
+			$value = implode(',', $value);
 		return $value;
 	}
 }
