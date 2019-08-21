@@ -4,11 +4,11 @@ namespace App\Model\Companieshouse;
 
 class CompanieshouseFactory
 {
-	public function getComp($apikey, $type): CompanieshouseInterface
+	public function getComp($acc, $type): CompanieshouseInterface
 	{
 		if ($type == 'filing')
-			return new Filing($apikey);
+			return new Filing($acc);
 		elseif ($type == 'office')
-			return new Office($apikey);
+			return new Office($acc);
 	}
 }

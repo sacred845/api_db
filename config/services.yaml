@@ -9,6 +9,38 @@ parameters:
     comp_filing: 'companieshouse_filing.csv'
     apikeys: '%env(resolve:APIKEYS)%'
     
+    accounts:
+        acc_0:
+            apikey: KAtZ_yE25A6xbqmeZ6Y0H-gg6fMHXilZggTYjN_W
+            proxy: 138.59.206.94:9821:wKHjyt:aboKCe
+        acc_1:
+            apikey: whoplcFCp1fiZH2gdJbeKEeIICb-2XoMVrMaef-2
+            proxy: 138.59.206.83:9561:wKHjyt:aboKCe
+        acc_2:
+            apikey: 7-D6maM6uwv7Pd7Z55zhzr7RwfiUKWuvcPma9NzP
+            proxy: 138.59.206.71:9978:wKHjyt:aboKCe        
+        acc_3:
+            apikey: QYKt0E6SlCBfycfBtpzadKFe3f_UWmQPG2DrWea9
+            proxy: 138.59.206.53:9635:wKHjyt:aboKCe   
+        acc_4:
+            apikey: YpGcljqCvkCveMrvVD7qcBbjOs7w9i1pobfk-FAq
+            proxy: 138.59.206.43:9294:wKHjyt:aboKCe
+        acc_5:
+            apikey: Q7FK2x5sgcyE903J-jjQCx2aWLdVnaFCIbAzHiyF
+            proxy: 138.59.206.33:9589:wKHjyt:aboKCe    
+        acc_6:
+            apikey: 5l23qrREEAd4nDhlXt8137JEXVfOrl8-EUDXolqj
+            proxy: 138.59.206.26:9475:wKHjyt:aboKCe
+        acc_7:
+            apikey: qWdhSa71c-GKedkPpJ5hpUEMPqjj1akensftL4cP
+            proxy: 138.59.206.9:9749:wKHjyt:aboKCe
+        acc_8:
+            apikey: c9lCRNe3UZuzUPanIQnO47Oz7fLfZ7rS4UuEwSEd
+            proxy: 138.59.205.234:9216:wKHjyt:aboKCe    
+        acc_9:
+            apikey: RkxpupMNez46BLUwttXDfIL5rw7d5kg3JYxyHZNN
+            proxy: 138.59.205.208:9702:wKHjyt:aboKCe           
+
 services:
     # default configuration for services in *this* file
     _defaults:
