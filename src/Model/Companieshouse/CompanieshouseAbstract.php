@@ -9,15 +9,17 @@ abstract class CompanieshouseAbstract implements CompanieshouseInterface
 	const API_URL = 'https://api.companieshouse.gov.uk/';
 	
 	private $apikey;
+	private $proxy;
 	private $responsecode;
 	
 	abstract public function getCSVData($number): ?array;
 	abstract public function getFields(): array;
 	abstract protected function getApiUrl(): string;
 	
-	public function __construct($apikey)
+	public function __construct($acc)
 	{
-		$this->apikey = $apikey;
+		$this->apikey = $acc['apikey'];
+		$this->proxy = $acc['proxy'] ?? null;
 	}	
 	
 	public function isOverLimit(): bool
@@ -41,7 +43,7 @@ abstract class CompanieshouseAbstract implements CompanieshouseInterface
 	protected function getDataByNumber($number)
 	{
 		$url = $this->getRequestUrl($number);
-		$respnose = (Core::getInstance())->sendGetAuthRequest($url, $this->apikey.':');
+		$respnose = (Core::getInstance())->sendGetAuthRequest($url, $this->apikey.':', $this->proxy);
 		$this->responsecode = $respnose['code'];
 		$res = null;
 		if (($this->responsecode == 200) && $respnose['response']) {

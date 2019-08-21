@@ -50,8 +50,10 @@ abstract class UploadCompanyData implements ShedulerInterface
 		$factory = new CompanieshouseFactory();
 		$keys = explode(',', (Core::getInstance())->getParameter('apikeys'));
 
-		foreach ($keys as $key)
-			$this->comps[] = $factory->getComp($key, $name);
+		$accounts = (Core::getInstance())->getParameter('accounts');
+
+		foreach (array_values($accounts) as $acc)
+			$this->comps[] = $factory->getComp($acc, $name);
 		if (count($this->comps) > 1)
 			$this->compindex = rand(0, count($this->comps) - 1);
 		else

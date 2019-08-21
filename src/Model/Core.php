@@ -118,7 +118,7 @@ class Core
 		return ['code' => $httpCode, 'response' => $response];
 	}
 
-	public function sendGetAuthRequest($url, $auth)
+	public function sendGetAuthRequest($url, $auth, $proxy)
 	{
 		$ch = curl_init();
 		curl_setopt($ch,CURLOPT_URL,$url);
@@ -131,6 +131,15 @@ class Core
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_HEADER, false);
 		curl_setopt($ch, CURLOPT_NOBODY, false);
+		if ($proxy) {
+			$proxyitems = explode(':', $proxy);
+			if (count($proxyitems) == 4) {
+				curl_setopt($ch, CURLOPT_PROXY, $proxyitems[0].':'.$proxyitems[1]);
+				curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyitems[2].':'.$proxyitems[3]);
+			} else
+				curl_setopt($ch, CURLOPT_PROXY, $proxy);
+			curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+		}
 		$response = curl_exec($ch);
 		$info = curl_getinfo($ch);
 		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
