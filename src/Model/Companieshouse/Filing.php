@@ -80,8 +80,6 @@ class Filing extends CompanieshouseAbstract
 				$line[$paramname] = $this->getValueByField($field, $item);
 			}	
 			$res[] = $line;
-			var_dump($line['links_document_metadata']);
-			var_dump($line['links_self']);exit;
 		}
 		
 		return $res;

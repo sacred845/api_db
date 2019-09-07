@@ -23,7 +23,8 @@ class UpdateFilingCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('app:filing:update');
+            ->setName('app:filingpath:update')
+			->addArgument('part', InputArgument::REQUIRED, 'Part id.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -73,7 +74,7 @@ class UpdateFilingCommand extends ContainerAwareCommand
 		$em->flush($proc);
 		if (!$ishaserror) {
 			*/
-			
+			 
 		$proc = new QueuesProcess();
 		$proc->setStatus(QueuesProcess::STATUS_INPROGRESS)
 					->setStartedAt(new \DateTime('now'))
@@ -83,7 +84,7 @@ class UpdateFilingCommand extends ContainerAwareCommand
 			
 		$process = new Process(array('/usr/bin/php', 
 						$this->getContainer()->get('kernel')->getRootDir().'/../bin/console', 
-						'app:companieshouse:getfiling', $proc->getId()));	
+						'app:companieshouse:getfiling', $proc->getId(), $input->getArgument('part')));	
 		$process->setTimeout(3600*24*20);
 		$process->setIdleTimeout(3600*24*20);
 		try {
@@ -98,25 +99,6 @@ class UpdateFilingCommand extends ContainerAwareCommand
 		$proc->setFinishedAt(new \DateTime('now'));
 		$em->flush($proc);
 			
-			
-			
-	//	}
-		
-		if (!$ishaserror) {
-			$path = (Core::getInstance())->getTmpPath();
-			$filedir = $path.'../public/files/';
-			chdir($filedir);
-
-			$name = $this->getContainer()->getParameter('comp_filing');
-			$newname = str_replace('.csv','_'.date('Y-m-d_h:i:s').'.csv',$name);
-			$file = $em->getRepository(OutputFile::class)->findOneBy(['code' => 'comp_filing']);
-			$file->setName($newname.'.zip');
-			$em->flush($file);
-			
-			rename($path.$name, $filedir.$newname);
-			exec ('zip '.$newname.'.zip '.$newname.' > /dev/null', $output, $return_var);
-			unlink($filedir.$newname);
-		}
 
 		$task->setStatus($ishaserror ? QueuesTask::STATUS_ERROR : QueuesTask::STATUS_SUCCESS)
 			->setFinishedAt(new \DateTime('now'));

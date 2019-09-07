@@ -21,14 +21,17 @@ class UploadFiling extends UploadCompanyData
 		
 		$this->log(Logger::PRIORITY_INFO, 'Инициализация обэектов');
 		$comp = $this->initComps('filing');
-		$this->createDataFile($datafilename);
+
+		$this->createDataFile((Core::getInstance())->getParameter('comp_filing'));
 		$titles = array_map(function($item){return str_replace(':', '_', $item);},
 										$comp->getFields());
 		$this->saveData([$titles], $datafilename);
 		
 		$n = 0;
+		$j = 0;
 		$httperrors = [];
 		while ($data = fgetcsv($f)) {
+			$j++;
 		//	if ($n == 20) break;
 			$companynumber = $data[$companyindex];
 			$data = $comp->getCSVData($companynumber);
@@ -55,8 +58,20 @@ class UploadFiling extends UploadCompanyData
 				if (!$data)
 					$httperrors[$comp->getHttpCode()] = ($httperrors[$comp->getHttpCode()] ?? 0) + 1;
 				
-				if ($comp->isOverLimit())
-					$comp = $this->toNextComp();
+				if ($comp->isOverLimit()) {
+					$j = 0;
+					while($comp->isOverLimit() && ($j < 20)) {
+						sleep(60);
+						$data = $comp->getCSVData($companynumber);
+						
+						if ($data) {
+							$this->saveData($data, $datafilename);
+							$n++;
+						} else 
+							$this->log(Logger::PRIORITY_ERROR, $comp->getHttpCode().' - попытка '.$j);
+						$j++;
+					}	
+				}
 			}
 			
 			if (($n % 1000) == 0)

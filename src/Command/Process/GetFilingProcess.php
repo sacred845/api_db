@@ -24,7 +24,8 @@ class GetFilingProcess extends ContainerAwareCommand
     {
         $this
             ->setName('app:companieshouse:getfiling')
-            ->addArgument('id', InputArgument::REQUIRED, 'Process id.');
+            ->addArgument('id', InputArgument::REQUIRED, 'Process id.')
+			->addArgument('part', InputArgument::REQUIRED, 'Part id.');
     }
     
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -47,7 +48,7 @@ class GetFilingProcess extends ContainerAwareCommand
 		$proc->setPid(getmypid());
 		$em->flush($proc);
 
-		(new UploadFiling())->execute();
+		(new UploadFiling())->setPart($input->getArgument('part'))->execute();
 
 		echo "Success\n";
     }
