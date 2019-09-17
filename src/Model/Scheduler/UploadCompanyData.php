@@ -13,9 +13,16 @@ use App\Model\Companieshouse\CompanieshouseInterface;
 abstract class UploadCompanyData implements ShedulerInterface
 {
 	protected $part;
+	protected $tmpprotectfile;
 	
 	public function __construct ()
 	{
+	}
+	
+	public function __destruct()
+	{
+		$path = (Core::getInstance())->getTmpPath().'busy/';
+		unlink($path.$this->tmpprotectfile);
 	}
 	
 	abstract public function execute();
@@ -23,6 +30,10 @@ abstract class UploadCompanyData implements ShedulerInterface
 	public function setPart($part)
 	{
 		$this->part = $part;
+		$path = (Core::getInstance())->getTmpPath().'busy/';
+		$this->tmpprotectfile = 'protect'.$this->part;
+		$f = fopen($path.$this->tmpprotectfile, 'w');
+		fclose($f);
 		return $this;
 	}
 
@@ -55,7 +66,8 @@ abstract class UploadCompanyData implements ShedulerInterface
 		foreach (array_values($accounts) as $acc)
 			$this->comps[] = $factory->getComp($acc, $name);
 		if (count($this->comps) > 1)
-			$this->compindex = rand(0, count($this->comps) - 1);
+			$this->compindex = $this->part;
+			//$this->compindex = rand(0, count($this->comps) - 1);
 		else
 			$this->compindex = 0;
 
@@ -82,6 +94,8 @@ abstract class UploadCompanyData implements ShedulerInterface
 	
 	protected function createDataFile($name)
 	{
+		if (!is_null($this->part))
+			$name = str_replace('.csv', '_'.$this->part.'.csv', $name);
 		//$name = (Core::getInstance())->getParameter('companieshouse_officies');
 		$path = (Core::getInstance())->getTmpPath();
 		$f = fopen($path.$name, 'w');
@@ -92,6 +106,8 @@ abstract class UploadCompanyData implements ShedulerInterface
 	
 	protected function saveData(array $data, $name)
 	{
+		if (!is_null($this->part))
+			$name = str_replace('.csv', '_'.$this->part.'.csv', $name);
 		//$name = (Core::getInstance())->getParameter('companieshouse_officies');
 		$path = (Core::getInstance())->getTmpPath();
 		$f = fopen($path.$name, 'a');

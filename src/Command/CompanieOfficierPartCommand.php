@@ -96,23 +96,12 @@ class CompanieOfficierPartCommand extends ContainerAwareCommand
 			$proc->setFinishedAt(new \DateTime('now'));
 			$em->flush($proc);
 	//	}
-		
+/*		
 		if (!$ishaserror) {
 			
 			$path = (Core::getInstance())->getTmpPath();
 			$filedir = $path.'../public/files/';
 			chdir($filedir);
-			/*
-			$name = $this->getContainer()->getParameter('companieshouse'); 
-			$newname = str_replace('.csv','_'.date('Y-m-d_h:i:s').'.csv',$name);
-			$file = $em->getRepository(OutputFile::class)->findOneBy(['code' => 'companieshouse']);
-			$file->setName($newname.'.zip');
-			$em->flush($file);
-			
-			rename($path.$name, $filedir.$newname);
-			exec ('zip '.$newname.'.zip '.$newname.' > /dev/null', $output, $return_var);
-			unlink($filedir.$newname);
-			*/
 			$name = $this->getContainer()->getParameter('comp_officies');
 			$newname = str_replace('.csv','_'.date('Y-m-d_h:i:s').'.csv',$name);
 			$file = $em->getRepository(OutputFile::class)->findOneBy(['code' => 'comp_officies']);
@@ -123,7 +112,7 @@ class CompanieOfficierPartCommand extends ContainerAwareCommand
 			exec ('zip '.$newname.'.zip '.$newname.' > /dev/null', $output, $return_var);
 			unlink($filedir.$newname);
 		}
-
+*/
 		$task->setStatus($ishaserror ? QueuesTask::STATUS_ERROR : QueuesTask::STATUS_SUCCESS)
 			->setFinishedAt(new \DateTime('now'));
 		$em->flush($task);
