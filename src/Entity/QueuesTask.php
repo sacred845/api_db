@@ -19,7 +19,7 @@ class QueuesTask
 	const CODE_COMPANIESHOUSE = 'update_companieshouse';
 	const CODE_FILING = 'update_filing';
 	const CODE_DOWNLOADCOMPANY = 'download_company';
-
+	const CODE_DOWNLOADOFFICIERS = 'download_officiers';
 	
     /**
      * @ORM\Id()

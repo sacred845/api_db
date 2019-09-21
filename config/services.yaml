@@ -8,6 +8,7 @@ parameters:
     comp_officies: 'companieshouse_officies.csv'
     comp_filing: 'companieshouse_filing.csv'
     apikeys: '%env(resolve:APIKEYS)%'
+    num_thread: 30
     
     accounts:
         acc_0:

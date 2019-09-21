@@ -36,6 +36,7 @@ class CompanieOfficierPartCommand extends ContainerAwareCommand
 		
 		$task = new QueuesTask ();
 		$task->setCode(QueuesTask::CODE_COMPANIESHOUSE)
+				->setParams(['part' => $input->getArgument('part')])
 				->setStatus(QueuesTask::STATUS_INPROGRESS);
 		$em->persist($task);
 		$em->flush($task);			
@@ -72,13 +73,21 @@ class CompanieOfficierPartCommand extends ContainerAwareCommand
 		$em->flush($proc);
 		if (!$ishaserror) {
 			*/
+            
+            
+            
+            
+            
+            
+            
 			$proc = new QueuesProcess();
 			$proc->setStatus(QueuesProcess::STATUS_INPROGRESS)
 						->setStartedAt(new \DateTime('now'))
 						->setTask($task);		
 			$em->persist($proc);
-			$em->flush($proc);			
-			
+			$em->flush($proc);	
+
+
 			$process = new Process(array('/usr/bin/php', 
 							$this->getContainer()->get('kernel')->getRootDir().'/../bin/console', 
 							'app:companieshouse:getoffice', $proc->getId(), $input->getArgument('part')));	
@@ -93,8 +102,16 @@ class CompanieOfficierPartCommand extends ContainerAwareCommand
 				$ishaserror = true;
 			}
 			echo $process->getOutput();
+
 			$proc->setFinishedAt(new \DateTime('now'));
 			$em->flush($proc);
+            
+            
+            
+            
+            
+            
+            
 	//	}
 /*		
 		if (!$ishaserror) {
