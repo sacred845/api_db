@@ -35,7 +35,7 @@ class CollectOfficierCommand extends ContainerAwareCommand
 		chdir($filedir);
 		
 		$name = $this->getContainer()->getParameter('comp_officies');
-		$numstream = 10;
+		$numstream = 30;
 		
 		$output = fopen($path.$name, 'w');
 		stream_set_write_buffer ($output , 0 );

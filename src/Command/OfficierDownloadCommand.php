@@ -39,16 +39,18 @@ class OfficierDownloadCommand extends ContainerAwareCommand
 				->setParams(['num' => $num])
 				->setStatus(QueuesTask::STATUS_INPROGRESS);
 		$em->persist($task);
-		$em->flush($task);		
-		
+		$em->flush($task);
+        $taskid = $task->getId();
+		$em->getUnitOfWork()->clear(QueuesTask::class);
         
         $processes = [];
         for ($i = 0; $i < $num; $i++) {
             $processes[$i] = new Process(array('/usr/bin/php', 
-                            $this->getContainer()->get('kernel')->getRootDir().'/../bin/console', 
+                            $this->getContainer()->get('kernel')->getProjectDir().'/bin/console', 
                             'app:officierpath:update', $i));
 			$processes[$i]->setTimeout(3600*24*20);
 			$processes[$i]->setIdleTimeout(3600*24*20);
+			//$processes[$i]->disableOutput();
             $processes[$i]->start();
 
         }
@@ -59,17 +61,18 @@ class OfficierDownloadCommand extends ContainerAwareCommand
             $isbisy = false; 
             for ($i = 0; $i < $num; $i++) {
                 $isbisy = $isbisy || $processes[$i]->isRunning();
-			}
+	    	}
+            sleep(1800);
         }
  
         for ($i = 0; $i < $num; $i++) {
-			$ishaserror = $ishaserror || $processes[$i]->getErrorOutput();;
+			$ishaserror = $ishaserror || $processes[$i]->getErrorOutput();
 		} 
-		
+
 		if (!$ishaserror) {
 			echo 'Collect data';
 			$collect = new Process(array('/usr/bin/php', 
-                            $this->getContainer()->get('kernel')->getRootDir().'/../bin/console', 
+                            $this->getContainer()->get('kernel')->getProjectDir().'/bin/console', 
                             'app:collect:officier'));
 			$collect->setTimeout(3600*24);
 			$collect->setIdleTimeout(3600*24);
@@ -80,7 +83,7 @@ class OfficierDownloadCommand extends ContainerAwareCommand
 			}		
 			echo $collect->getOutput();			
 		}
-
+        $task = $em->getRepository(QueuesTask::class)->find($taskid);
 		$task->setStatus($ishaserror ? QueuesTask::STATUS_ERROR : QueuesTask::STATUS_SUCCESS)
 			->setFinishedAt(new \DateTime('now'));
 		$em->flush($task);		

@@ -39,6 +39,7 @@ class GetOfficeProcess extends ContainerAwareCommand
 		$proc = $em->getRepository(QueuesProcess::class)->find($input->getArgument('id'));
 		$proc->setPid(getmypid());
 		$em->flush($proc);
+        $em->getUnitOfWork()->clear(QueuesProcess::class);
 
 		(new UploadOffice())->setPart($input->getArgument('part'))->execute();
 /*

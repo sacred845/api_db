@@ -89,29 +89,31 @@ class CompanieOfficierPartCommand extends ContainerAwareCommand
 
 
 			$process = new Process(array('/usr/bin/php', 
-							$this->getContainer()->get('kernel')->getRootDir().'/../bin/console', 
+							$this->getContainer()->get('kernel')->getProjectDir().'/bin/console', 
 							'app:companieshouse:getoffice', $proc->getId(), $input->getArgument('part')));	
 			$process->setTimeout(3600*24*20);
-			$process->setIdleTimeout(3600*24*20);
+			$process->disableOutput();
+            
+            $taskid = $task->getId();
+            $procid = $proc->getId();
+            $em->getUnitOfWork()->clear(QueuesProcess::class);
+            $em->getUnitOfWork()->clear(QueuesTask::class);
+            
 			try {
 				$process->mustRun();
+                $proc = $em->getRepository(QueuesProcess::class)->find($procid);
 				$proc->setStatus(QueuesProcess::STATUS_SUCCESS);
 			} catch (ProcessFailedException $exception) {
+                $proc = $em->getRepository(QueuesProcess::class)->find($procid);
 				$proc->setStatus(QueuesProcess::STATUS_ERROR)
 						->setMessage($exception->getMessage());
 				$ishaserror = true;
 			}
-			echo $process->getOutput();
+			//echo $process->getOutput();
 
 			$proc->setFinishedAt(new \DateTime('now'));
 			$em->flush($proc);
-            
-            
-            
-            
-            
-            
-            
+
 	//	}
 /*		
 		if (!$ishaserror) {
@@ -130,6 +132,7 @@ class CompanieOfficierPartCommand extends ContainerAwareCommand
 			unlink($filedir.$newname);
 		}
 */
+        $task = $em->getRepository(QueuesTask::class)->find($taskid);
 		$task->setStatus($ishaserror ? QueuesTask::STATUS_ERROR : QueuesTask::STATUS_SUCCESS)
 			->setFinishedAt(new \DateTime('now'));
 		$em->flush($task);

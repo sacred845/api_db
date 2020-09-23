@@ -30,15 +30,18 @@ class TestCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-		set_time_limit(3600*24*20);
 
-		$a  = 1;
-
-		while($a) {
-			
-			(Core::getInstance())->toLog(Logger::PRIORITY_DEBUG, $a." min\n", 'Test_logger');
-			sleep(60);
-			$a++;
-		}
+			$process = new Process(array('/usr/bin/php', 
+							$this->getContainer()->get('kernel')->getProjectDir().'/bin/console', 
+							'app:test:proc', '234'));	
+			$process->setTimeout(3600*24*20);
+			$process->disableOutput();
+			try {
+				$process->mustRun();
+			} catch (ProcessFailedException $exception) {
+				$ishaserror = true;
+			}
+		//	echo $process->getOutput();
+            echo "OK\n";
 	}
 }

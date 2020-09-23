@@ -83,7 +83,7 @@ class UpdateFilingCommand extends ContainerAwareCommand
 		$em->flush($proc);			
 			
 		$process = new Process(array('/usr/bin/php', 
-						$this->getContainer()->get('kernel')->getRootDir().'/../bin/console', 
+						$this->getContainer()->get('kernel')->getProjectDir().'/bin/console', 
 						'app:companieshouse:getfiling', $proc->getId(), $input->getArgument('part')));	
 		$process->setTimeout(3600*24*20);
 		$process->setIdleTimeout(3600*24*20);

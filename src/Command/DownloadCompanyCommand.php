@@ -53,7 +53,7 @@ class DownloadCompanyCommand extends ContainerAwareCommand
 		$em->persist($proc);
 		$em->flush($proc);
 		$process = new Process(array('/usr/bin/php', 
-						$this->getContainer()->get('kernel')->getRootDir().'/../bin/console', 
+						$this->getContainer()->get('kernel')->getProjectDir().'/bin/console', 
 						'app:file:load', $proc->getId()));	
 		$process->setTimeout(3600*24);
 		$process->setIdleTimeout(3600*24);

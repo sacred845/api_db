@@ -32,7 +32,7 @@ class Core
 	public function getTmpPath()
 	{
         global $kernel;
-        return $kernel->getRootDir().'/../tmp/';
+        return $kernel->getProjectDir().'/tmp/';
 	}
 	
 	public function getParameter($param)
@@ -115,6 +115,7 @@ class Core
 		$response = curl_exec($ch);
 		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close ($ch);
+        unset($ch);
 		return ['code' => $httpCode, 'response' => $response];
 	}
 
@@ -144,6 +145,7 @@ class Core
 		$info = curl_getinfo($ch);
 		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close ($ch);
+        unset($ch);
 		return ['code' => $httpCode, 'response' => $response, 'info' => $info, 
 		    'type' => 'GET', 'url' => $url];
 	}

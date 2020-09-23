@@ -52,6 +52,6 @@ class Logger
     private function getPath(): string
     {
         global $kernel;
-        return $kernel->getRootDir().'/../var/log/';
+        return $kernel->getProjectDir().'/var/log/';
     }
 }
